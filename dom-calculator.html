@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator UI</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #1e1e1e;
+        user-select: none;
+      }
+
+      .hero {
+        width: 350px;
+        padding: 20px;
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.653);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      }
+
+      .fillz {
+        width: 100%;
+        height: 60px;
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        font-size: 28px;
+        text-align: right;
+        border: none;
+        border-radius: 8px;
+        color: rgb(254, 252, 252);
+        background: #111;
+        outline: none;
+      }
+
+      .first {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .first button {
+        flex: 1;
+        padding: 12px 0;
+        text-align: center;
+        border-radius: 8px;
+        font-weight: bold;
+
+        color: #fff;
+        background-color: #ff4d4d;
+        transition: 0.2s;
+      }
+      .first .allclear {
+        background-color: #ff9800;
+      }
+
+      .second {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .second .row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .second button {
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        border-radius: 50px;
+        background: #2b2b2b;
+        color: #fff;
+        cursor: pointer;
+        user-select: none;
+        transition: 0.2s;
+      }
+
+      .second .op {
+        background: #3f51b5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .first .enter {
+        background: #444;
+        border-radius: 5px;
+      }
+
+      .second button:hover {
+        background: #444;
+      }
+
+      .second button:active {
+        transform: scale(0.95);
+      }
+      button {
+        border: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="hero">
+      <div class="fillz" id="fillz"></div>
+
+      <div class="first">
+        <button onclick="clearz()" disabled="true" id="clearz">Clear</button>
+        <button
+          onclick="allclearz()"
+          class="allclear"
+          id="alclear"
+          disabled="true"
+        >
+          All Clear
+        </button>
+        <button onclick="enterValue()" disabled="true" class="enter" id="enter">
+          Enter
+        </button>
+      </div>
+
+      <div class="second">
+        <div class="row">
+          <button onclick="num(1)">1</button>
+          <button onclick="num(2)">2</button>
+          <button onclick="num(3)">3</button>
+          <button class="op" onclick="num('+')">+</button>
+        </div>
+
+        <div class="row">
+          <button onclick="num(4)">4</button>
+          <button onclick="num(5)">5</button>
+          <button onclick="num(6)">6</button>
+          <button onclick="num('-')" class="op">−</button>
+        </div>
+
+        <div class="row">
+          <button onclick="num(7)">7</button>
+          <button onclick="num(8)">8</button>
+          <button onclick="num(9)">9</button>
+          <button onclick="num('*')" class="op">*</button>
+        </div>
+
+        <div class="row">
+          <button onclick="num('.')">.</button>
+          <button onclick="num(0)">0</button>
+          <button onclick="num('00')">00</button>
+          <button onclick="num('/')" class="op">/</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let values = [];
+      var fillz = document.getElementById("fillz");
+      var enter = document.getElementById("enter");
+      var alclear = document.getElementById("alclear");
+      var clearzz = document.getElementById("clearz");
+      function enterz() {
+        enter.disabled = false;
+        alclear.disabled = false;
+        clearzz.disabled = false;
+        alclear.style.cssText = "cursor: pointer";
+        clearzz.style.cssText = "cursor: pointer";
+        enter.style.cssText = "background:#18be31; cursor: pointer";
+      }
+      function dis_enter() {
+        enter.disabled = true;
+        clearzz.disabled = true;
+        alclear.disabled = true;
+        alclear.style.cssText = "cursor: not-allowed";
+        clearzz.style.cssText = "cursor: not-allowed";
+        enter.style.cssText = "background:#444;cursor: not-allowed";
+      }
+
+      function num(a) {
+        const ops =["+", "-", "*", "/", "."];
+        const last = values.at(-1);
+
+        // with the help of chat gpt start  
+        if (ops.includes(a)) {
+          if (!last || ops.includes(last) || values == Infinity) return;
+        }
+        // end       
+
+       if (values == Infinity) {
+          values = [];
+        }
+
+        values.push(a);
+        fillz.innerText = values.join("");
+        enterz();
+        const first = values[0];
+        console.log(first);
+      }
+
+      const enterValue = () => {
+        const result = eval(values.join(""));
+        fillz.innerText = result;
+        values = [result];
+      };
+
+      const clearz = () => {
+        values.pop();
+        const result = values.join("");
+        fillz.innerText = result;
+        let allc = values.length;
+        if (allc === 0) {
+          dis_enter();
+        }
+      };
+
+      const allclearz = () => {
+        // let allc = values.length;
+        // for (i = 0; i < allc; i++) {
+        //   values.pop();
+        // }
+        values = [];
+        fillz.innerText = values;
+        dis_enter();
+      };
+    </script>
+  </body>
+</html>
+
+<!-- 1- multipul dot use 
+ 4 - ya '-' ko use nhi rha tha starting ma or jab number starting ma lana ho 
+-->
